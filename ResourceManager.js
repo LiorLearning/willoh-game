@@ -74,11 +74,11 @@ export var ResourceManager = /*#__PURE__*/ function() {
             strings: 0,
             flint: 0,
             feather: 0,
-            crossbow: 0,
-            shield: 0,
-            obsidian: 0,
-            enderpearl: 0,
-            blazerod: 0 // Add blaze rod resource
+            grape: 0,
+            tulip: 0,
+            cactus: 0,
+            sunflower: 0,
+            blazerod: 0
         };
         // Track total resources collected for endermen speed
         this.totalResourcesCollected = 0;
@@ -91,13 +91,13 @@ export var ResourceManager = /*#__PURE__*/ function() {
         // Victory requirements based on game stage
         this.victoryRequirements = {
             stage1: {
-                crossbow: 1,
-                shield: 1,
-                obsidian: 4,
-                enderpearl: 2
+                grape: 1,
+                tulip: 1,
+                cactus: 4,
+                sunflower: 2
             },
             stage2: {
-                enderpearl: 2,
+                sunflower: 2,
                 blazerod: 2
             }
         };
@@ -295,11 +295,11 @@ export var ResourceManager = /*#__PURE__*/ function() {
                     feather: '#F5F5F5',
                     gold: '#FFD700',
                     'gold nugget': '#FFD700',
-                    crossbow: '#B8860B',
-                    shield: '#A9A9A9',
-                    obsidian: '#4B0082',
-                    enderpearl: '#9932CC',
-                    blazerod: '#FF8C00' // Add blaze rod color (orange)
+                    grape: '#B8860B',
+                    tulip: '#A9A9A9',
+                    cactus: '#4B0082',
+                    sunflower: '#FFD700',
+                    blazerod: '#FF8C00'
                 };
                 return colors[type] || '#333333';
             }
@@ -314,11 +314,11 @@ export var ResourceManager = /*#__PURE__*/ function() {
             key: "resetForStage2",
             value: function resetForStage2() {
                 // Preserve only enderpearls
-                const enderpearlCount = this.resources.enderpearl || 0;
+                const enderpearlCount = this.resources.sunflower || 0;
                 
                 // Reset all resources
                 this.resources = {
-                    enderpearl: enderpearlCount,
+                    sunflower: enderpearlCount,
                     blazerod: 0
                 };
                 

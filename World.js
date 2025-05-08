@@ -547,22 +547,22 @@ var World = /*#__PURE__*/ function() {
                                 this.drawGoldNugget(ctx, screenX1, item.y);
                             } else if (item.type === 'blazerod') {
                                 this.drawBlazeRod(ctx, screenX1, item.y);
-                            } else if (item.type === 'enderpearl') {
-                                // Draw enderpearl with floating animation
+                            } else if (item.type === 'sunflower') {
+                                // Draw sunflower with floating animation
                                 const floatOffset = Math.sin(Date.now() / 400) * 3;
                                 ctx.save();
                                 ctx.translate(0, floatOffset);
-                                this.drawEnderpearl(ctx, screenX1, item.y);
+                                this.drawSunflower(ctx, screenX1, item.y);
                                 ctx.restore();
                                 
-                                // Add particles for enderpearl
+                                // Add particles for sunflower
                                 if (Math.random() < 0.1) {
                                     // Occasionally add a particle effect
                                     const particleSize = 2 + Math.random() * 2;
                                     const particleX = screenX1 + item.width/2 + (Math.random() - 0.5) * 10;
                                     const particleY = item.y + item.height/2 + (Math.random() - 0.5) * 10;
                                     
-                                    ctx.fillStyle = '#55FFAA';
+                                    ctx.fillStyle = '#FFD700';
                                     ctx.globalAlpha = 0.7;
                                     ctx.beginPath();
                                     ctx.arc(particleX, particleY, particleSize, 0, Math.PI * 2);
@@ -746,32 +746,26 @@ var World = /*#__PURE__*/ function() {
             }
         },
         {
-            key: "drawEnderpearl",
-            value: function drawEnderpearl(ctx, x, y) {
+            key: "drawSunflower",
+            value: function drawSunflower(ctx, x, y) {
                 const pearlSize = 20;
-                const enderpearlTexture = this.assetLoader.getAsset('enderpearl');
+                const sunflowerTexture = this.assetLoader.getAsset('sunflower');
                 
-                if (enderpearlTexture) {
-                    ctx.drawImage(enderpearlTexture, x, y, pearlSize, pearlSize);
+                if (sunflowerTexture) {
+                    ctx.drawImage(sunflowerTexture, x, y, pearlSize, pearlSize);
                     
-                    // Add a subtle glow effect for the enderpearl
+                    // Add a subtle glow effect for the sunflower
                     ctx.save();
                     ctx.globalAlpha = 0.3;
-                    ctx.shadowColor = '#55FFAA';
+                    ctx.shadowColor = '#FFD700';
                     ctx.shadowBlur = 10;
-                    ctx.drawImage(enderpearlTexture, x, y, pearlSize, pearlSize);
+                    ctx.drawImage(sunflowerTexture, x, y, pearlSize, pearlSize);
                     ctx.restore();
                 } else {
                     // Fallback if texture isn't loaded
-                    ctx.fillStyle = '#1D8B77';
+                    ctx.fillStyle = '#FFD700';
                     ctx.beginPath();
                     ctx.arc(x + pearlSize/2, y + pearlSize/2, pearlSize/2, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    // Add inner glow
-                    ctx.fillStyle = '#55FFAA';
-                    ctx.beginPath();
-                    ctx.arc(x + pearlSize/2, y + pearlSize/2, pearlSize/4, 0, Math.PI * 2);
                     ctx.fill();
                 }
             }
@@ -1190,8 +1184,8 @@ var World = /*#__PURE__*/ function() {
                     case 'gold nugget':
                         this.drawGoldNugget(ctx, x, y);
                         break;
-                    case 'enderpearl':
-                        this.drawEnderpearl(ctx, x, y);
+                    case 'sunflower':
+                        this.drawSunflower(ctx, x, y);
                         break;
                     case 'blazerod':
                         this.drawBlazeRod(ctx, x, y);

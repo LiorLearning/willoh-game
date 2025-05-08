@@ -17,7 +17,7 @@ class VictoryScreen {
             height: 40,
             text: "⏩ REPLAY",
             hovered: false,
-            visible: false
+            visible: true
         };
         
         this.menuButton = {
@@ -27,12 +27,8 @@ class VictoryScreen {
             height: 40,
             text: "📋 MENU",
             hovered: false,
-            visible: false
+            visible: true
         };
-
-        // Initialize the feedback form
-        this.feedbackForm = new FeedbackForm(game);
-        this.showingForm = false;
 
         this.setupListeners();
         this.startTime = Date.now();
@@ -132,27 +128,12 @@ class VictoryScreen {
     show() {
         this.visible = true;
         this.startTime = Date.now();
-        this.showingForm = true;
-        this.replayButton.visible = false;
-        this.menuButton.visible = false;
-        
-        // Show feedback form after a short delay
-        setTimeout(() => {
-            this.feedbackForm.show();
-        }, 1500);
-    }
-
-    // Method to show buttons after feedback form is submitted
-    showButtons() {
-        this.showingForm = false;
         this.replayButton.visible = true;
         this.menuButton.visible = true;
-        this.feedbackForm.hide();
     }
 
     hide() {
         this.visible = false;
-        this.feedbackForm.hide();
     }
 
     restartGame() {
@@ -294,7 +275,7 @@ class VictoryScreen {
         ctx.fillStyle = '#ff6622';
         ctx.font = 'bold 48px "Press Start 2P", monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('🔥 Level 3 Complete! 🔥', CANVAS_WIDTH / 2, titleY);
+        ctx.fillText('🔥 Level Complete! 🔥', CANVAS_WIDTH / 2, titleY);
 
         // Story text with fade-in and floating effect
         const storyY = CANVAS_HEIGHT * 0.45;
@@ -304,36 +285,15 @@ class VictoryScreen {
         ctx.shadowBlur = 10;
         ctx.fillStyle = '#cccccc';
         ctx.font = '16px "Press Start 2P", monospace';
-        ctx.fillText('Steve collected the ender pearls and the blaze rods.', CANVAS_WIDTH / 2, storyY + floatOffset);
-        ctx.fillText('The Endermen retreated.', CANVAS_WIDTH / 2, storyY + 30 + floatOffset);
-        ctx.fillText('The Nether trembled beneath his feet.', CANVAS_WIDTH / 2, storyY + 60 + floatOffset);
-
-        // Next level text with glowing blue outline
-        const nextLevelY = CANVAS_HEIGHT * 0.65;
-        ctx.strokeStyle = '#4444ff';
-        ctx.lineWidth = 4;
-        ctx.shadowColor = '#0000ff';
-        ctx.shadowBlur = 15 + Math.sin(time * 3) * 5;
-        ctx.font = 'bold 24px "Press Start 2P", monospace';
-        // ctx.strokeText('⚔️ Level 4: To Be Created by Sandro ⚔️', CANVAS_WIDTH / 2, nextLevelY);
-        ctx.fillStyle = '#ffffff';
-        ctx.fillText('⚔️ Level 4: To Be Created by Sandro ⚔️', CANVAS_WIDTH / 2, nextLevelY);
+        ctx.textAlign = 'center';
+        ctx.fillText('You have completed the level!', CANVAS_WIDTH / 2, storyY + 30 + floatOffset);
+        ctx.fillText('Choose your next action:', CANVAS_WIDTH / 2, storyY + 60 + floatOffset);
 
         ctx.restore();
 
-        // Render buttons if they're visible
-        if (this.replayButton.visible) {
-            this.renderPixelButton(ctx, this.replayButton);
-        }
-        
-        if (this.menuButton.visible) {
-            this.renderPixelButton(ctx, this.menuButton);
-        }
-
-        // Render feedback form if active
-        if (this.showingForm) {
-            this.feedbackForm.render(ctx);
-        }
+        // Render buttons
+        this.renderPixelButton(ctx, this.replayButton);
+        this.renderPixelButton(ctx, this.menuButton);
     }
 
     renderLavaCracks(ctx, time) {

@@ -10,9 +10,8 @@ import { AudioManager } from './AudioManager.js';
 import { CANVAS_WIDTH, CANVAS_HEIGHT, GROUND_LEVEL, GAME_STATE, MINING_REQUIRED_CLICKS } from './constants.js';
 import { FloatingText } from './FloatingText.js';
 import QuizPanel from './QuizPanel.js';
-// import Enderman from './Endermen.js';
 import { ResourceManager } from './ResourceManager.js';
-import Hammer from './Hammer.js';
+import PixieDust from './PixieDust.js';
 import Crossbow from './Crossbow.js';
 import Blaze from './Blaze.js';
 
@@ -245,15 +244,15 @@ var Game = /*#__PURE__*/ function() {
             glow: '#FFA500'
         };
 
-        // Initialize hammer array
-        this.hammers = [];
-        this.hammerCooldown = 0;
-        this.hammerCooldownTime = 1500; // 1.5 seconds between hammer throws
+        // Initialize pixie dust array
+        this.pixieDusts = [];
+        this.pixieDustCooldown = 0;
+        this.pixieDustCooldownTime = 1500; // 1.5 seconds between throws
 
         // Initialize crossbow array (for after portal)
         this.arrows = [];
         this.crossbowCooldown = 0; 
-        this.crossbowCooldownTime = 1000; // Slightly faster than hammer
+        this.crossbowCooldownTime = 1000; // Slightly faster than pixie dust
         this.enteredPortal = false; // Flag to track if player has entered portal
 
         // Initialize
@@ -303,10 +302,10 @@ var Game = /*#__PURE__*/ function() {
                                     strings: 0,
                                     flint: 0,
                                     feather: 0,
-                                    crossbow: 0,
-                                    shield: 0,
-                                    obsidian: 0,
-                                    enderpearl: 0
+                                    grape: 0,
+                                    tulip: 0,
+                                    cactus: 0,
+                                    sunflower: 0
                                 };
                                 
                                 // Initialize resource manager
@@ -489,9 +488,9 @@ var Game = /*#__PURE__*/ function() {
         {
             key: "tryCollectResource",
             value: function tryCollectResource() {
-                // Check if we should throw the hammer instead
-                if (this.tryThrowHammer()) {
-                    return; // Hammer thrown, early exit
+                // Check if we should throw pixie dust instead
+                if (this.tryThrowPixieDust()) {
+                    return; // Pixie dust thrown, early exit
                 }
                 
                 // First try mining (which now also handles resource collection)
@@ -696,8 +695,8 @@ var Game = /*#__PURE__*/ function() {
             }
         },
         {
-            key: "tryThrowHammer",
-            value: function tryThrowHammer() {
+            key: "tryThrowPixieDust",
+            value: function tryThrowPixieDust() {
                 // Don't throw if on cooldown
                 if (this.enteredPortal) {
                     // Use crossbow after entering portal
@@ -705,8 +704,8 @@ var Game = /*#__PURE__*/ function() {
                         return false;
                     }
                 } else {
-                    // Use hammer before entering portal
-                    if (this.hammerCooldown > 0) {
+                    // Use pixie dust before entering portal
+                    if (this.pixieDustCooldown > 0) {
                         return false;
                     }
                 }
@@ -753,7 +752,7 @@ var Game = /*#__PURE__*/ function() {
                     // Play throw sound
                     this.audioManager.play('collect', 1.4);
                     
-                    // Apply screen shake (less than hammer)
+                    // Apply screen shake (less than pixie dust)
                     this.applyScreenShake(1);
                     
                     // Show throwing message
@@ -771,13 +770,13 @@ var Game = /*#__PURE__*/ function() {
                     return true; // Arrow was shot
                     
                 } else {
-                    // Create a new hammer (original behavior)
-                    const hammer = new Hammer(weaponX, weaponY, playerDirection, this.assetLoader);
-                    hammer.initialX = weaponX; // Store initial position for distance calculation
-                    this.hammers.push(hammer);
+                    // Create a new pixie dust
+                    const pixieDust = new PixieDust(weaponX, weaponY, playerDirection, this.assetLoader);
+                    pixieDust.initialX = weaponX; // Store initial position for distance calculation
+                    this.pixieDusts.push(pixieDust);
                     
                     // Set cooldown
-                    this.hammerCooldown = this.hammerCooldownTime;
+                    this.pixieDustCooldown = this.pixieDustCooldownTime;
                     
                     // Play throw sound
                     this.audioManager.play('collect', 1.2);
@@ -786,9 +785,9 @@ var Game = /*#__PURE__*/ function() {
                     this.applyScreenShake(2);
                     
                     // Show throwing message
-                    this.floatingTexts.push(new FloatingText("Hammer throw!", this.player.x, this.player.y - 20));
+                    this.floatingTexts.push(new FloatingText("Pixie dust!", this.player.x, this.player.y - 20));
                     
-                    return true; // Hammer was thrown
+                    return true; // Pixie dust was thrown
                 }
             }
         },
@@ -796,8 +795,8 @@ var Game = /*#__PURE__*/ function() {
             key: "updateHammers",
             value: function updateHammers(deltaTime) {
                 // Update cooldowns
-                if (this.hammerCooldown > 0) {
-                    this.hammerCooldown -= deltaTime;
+                if (this.pixieDustCooldown > 0) {
+                    this.pixieDustCooldown -= deltaTime;
                 }
                 
                 if (this.crossbowCooldown > 0) {
@@ -805,12 +804,12 @@ var Game = /*#__PURE__*/ function() {
                 }
                 
                 if (!this.enteredPortal) {
-                    // BEFORE PORTAL: Update hammers and check enderman collisions
+                    // BEFORE PORTAL: Update pixie dust and check enderman collisions
                     
-                    // Update each hammer
-                    for (let i = this.hammers.length - 1; i >= 0; i--) {
-                        const hammer = this.hammers[i];
-                        hammer.update(deltaTime);
+                    // Update each pixie dust
+                    for (let i = this.pixieDusts.length - 1; i >= 0; i--) {
+                        const pixieDust = this.pixieDusts[i];
+                        pixieDust.update(deltaTime);
                         
                         // Check for collisions with endermen
                         let hitEnderman = false;
@@ -819,18 +818,8 @@ var Game = /*#__PURE__*/ function() {
                         for (let j = 0; j < endermen.length; j++) {
                             const enderman = endermen[j];
                             
-                            const collision = (
-                                hammer.x < enderman.x + enderman.width &&
-                                hammer.x + hammer.width > enderman.x &&
-                                hammer.y < enderman.y + enderman.height &&
-                                hammer.y + hammer.height > enderman.y
-                            );
-                            
-                            if (collision) {
+                            if (pixieDust.checkEndermanCollision(enderman)) {
                                 hitEnderman = true;
-                                
-                                // Trigger hit effect on hammer
-                                hammer.triggerHitEffect();
                                 
                                 // Deal 50 damage to the enderman
                                 const damageAmount = 50;
@@ -843,7 +832,7 @@ var Game = /*#__PURE__*/ function() {
                                 this.applyScreenShake(4);
                                 
                                 // Show hit message
-                                this.floatingTexts.push(new FloatingText("-50% Health!", hammer.x, hammer.y - 20));
+                                this.floatingTexts.push(new FloatingText("-50% Health!", pixieDust.x, pixieDust.y - 20));
                                 
                                 // If enderman is defeated, remove it and spawn enderpearl
                                 if (defeated) {
@@ -855,7 +844,7 @@ var Game = /*#__PURE__*/ function() {
                                     this.spawnEnderpearl(enderman.x, spawnY);
                                     
                                     // Add defeated message
-                                    this.floatingTexts.push(new FloatingText("Enderman defeated!", hammer.x, hammer.y - 40));
+                                    this.floatingTexts.push(new FloatingText("Enderman defeated!", pixieDust.x, pixieDust.y - 40));
                                 }
                                 
                                 // Break out of enderman loop
@@ -863,65 +852,9 @@ var Game = /*#__PURE__*/ function() {
                             }
                         }
                         
-                        // Remove hammer if it hit something or is no longer active
-                        if (hitEnderman || !hammer.active) {
-                            this.hammers.splice(i, 1);
-                        }
-                    }
-                    
-                } else {
-                    // AFTER PORTAL: Update crossbow arrows and check blaze collisions
-                    
-                    // Update each arrow
-                    for (let i = this.arrows.length - 1; i >= 0; i--) {
-                        const arrow = this.arrows[i];
-                        arrow.update(deltaTime);
-                        
-                        // Check for collisions with blazes
-                        let hitBlaze = false;
-                        const blazes = this.world.blazes;
-                        for (let j = 0; j < blazes.length; j++) {
-                            const blaze = blazes[j];
-                            
-                            const collision = arrow.checkBlazeCollision(blaze);
-                            
-                            if (collision) {
-                                hitBlaze = true;
-                                
-                                // Deal 50 damage to the blaze
-                                const damageAmount = 50;
-                                const defeated = blaze.takeDamage(damageAmount);
-                                
-                                // Play hit sound
-                                this.audioManager.play('hurt', 1.1);
-                                
-                                // Apply screen shake
-                                this.applyScreenShake(4);
-                                
-                                // Show hit message
-                                this.floatingTexts.push(new FloatingText("-50% Health!", arrow.x, arrow.y - 20));
-                                
-                                // If blaze is defeated, remove it and spawn blaze rod
-                                if (defeated) {
-                                    // Remove blaze from the world's blazes array
-                                    this.world.blazes.splice(j, 1);
-                                    
-                                    // Spawn blaze rod at the correct position
-                                    const spawnY = blaze.platform ? blaze.y + blaze.height : blaze.y;
-                                    this.spawnBlazeRod(blaze.x, spawnY);
-                                    
-                                    // Add defeated message
-                                    this.floatingTexts.push(new FloatingText("Blaze defeated!", arrow.x, arrow.y - 40));
-                                }
-                                
-                                // Break out of blaze loop
-                                break;
-                            }
-                        }
-                        
-                        // Remove arrow if it hit something or is no longer active
-                        if (hitBlaze || !arrow.active) {
-                            this.arrows.splice(i, 1);
+                        // Remove pixie dust if it hit something or is no longer active
+                        if (hitEnderman || !pixieDust.active) {
+                            this.pixieDusts.splice(i, 1);
                         }
                     }
                 }
@@ -930,9 +863,9 @@ var Game = /*#__PURE__*/ function() {
         {
             key: "spawnEnderpearl",
             value: function spawnEnderpearl(x, y) {
-                // Add an enderpearl item to the world at the position where the enderman was hit
+                // Add a sunflower item to the world at the position where the enderman was hit
                 this.world.addItem({
-                    type: 'enderpearl',
+                    type: 'sunflower',
                     x: x,
                     y: y,
                     width: 20,
@@ -940,7 +873,7 @@ var Game = /*#__PURE__*/ function() {
                 });
                 
                 // Show message about dropped item
-                this.floatingTexts.push(new FloatingText("Ender Pearl dropped!", x, y - 40));
+                this.floatingTexts.push(new FloatingText("Sunflower dropped!", x, y - 40));
             }
         },
         {
@@ -1039,7 +972,7 @@ var Game = /*#__PURE__*/ function() {
                     this.world.updateMiningSpots(deltaTime);
                     this.player.update(deltaTime, this.world);
                     
-                    // Update hammers or arrows
+                    // Update pixie dust or arrows
                     this.updateHammers(deltaTime);
 
                     // Camera and viewport updates
@@ -1339,7 +1272,7 @@ var Game = /*#__PURE__*/ function() {
 
                 // We don't need to render endermen here since they're already rendered in world.render()
 
-                // Render hammers or arrows based on game stage
+                // Render pixie dust or arrows based on game stage
                 if (this.enteredPortal) {
                     // Render arrows
                     this.arrows.forEach(arrow => {
@@ -1357,9 +1290,9 @@ var Game = /*#__PURE__*/ function() {
                         }
                     });
                 } else {
-                    // Render hammers (original stage)
-                    this.hammers.forEach(hammer => {
-                        hammer.render(this.ctx, this.cameraOffset);
+                    // Render pixie dust (original stage)
+                    this.pixieDusts.forEach(pixieDust => {
+                        pixieDust.render(this.ctx, this.cameraOffset);
                     });
                 }
             }
@@ -1776,50 +1709,18 @@ var Game = /*#__PURE__*/ function() {
                     // Apply screen shake for effect
                     this.applyScreenShake(2);
                     
-                    // Change background image to background2.png
-                    console.log("Changing background to background2.png");
-                    this._backgroundImage = this.assetLoader.getAsset('bg_Sandro2');
-                    if (!this._backgroundImage) {
-                        console.log("Background2 image not preloaded, loading now");
-                        this.assetLoader.loadImage('bg_Sandro2', './assets/level3/background2.png')
-                            .then(img => {
-                                console.log("Background2 image loaded successfully");
-                                this._backgroundImage = img;
-                            });
-                    } else {
-                        console.log("Using preloaded background2 image");
-                    }
-                    
-                    // Change dave image to dave2.png
-                    console.log("Changing Dave image to dave2.png");
-                    const dave2Image = this.assetLoader.getAsset('dave minecraft2');
-                    if (dave2Image) {
-                        console.log("Using preloaded dave2 image");
-                        this.assetLoader.assets['dave minecraft'] = dave2Image;
-                    } else {
-                        console.log("Dave2 image not preloaded, loading now");
-                        this.assetLoader.loadImage('dave minecraft2', './assets/level3/dave2.png')
-                            .then(img => {
-                                console.log("Dave2 image loaded successfully");
-                                this.assetLoader.assets['dave minecraft'] = img;
-                            });
-                    }
-                    
                     // Set flag to prevent repeated triggers
                     this.enteredPortal = true;
                     
                     // Remove the portal
                     this.portal = null;
                     
-                    // Replace endermen with blazes
-                    this.replaceEndermanWithBlazes();
+                    // Show victory screen immediately and keep it on screen
+                    this.gameState = GAME_STATE.VICTORY;
+                    this.victoryScreen.show();
                     
-                    // Clear existing hammers and reset cooldowns
-                    this.hammers = [];
-                    this.hammerCooldown = 0;
-                    
-                    // Reset resource requirements for Stage 2
-                    this.updateResourceRequirements();
+                    // Stop game updates but keep rendering
+                    this.isGameActive = false;
                     
                     return true;
                 }
@@ -2057,10 +1958,10 @@ var Game = /*#__PURE__*/ function() {
                 const collidedBlaze = this.world.checkBlazeCollisions(this.player);
                 if (!collidedBlaze) return;
                 
-                // Check if any arrows have active shield
+                // Check if any pixie dust have active shield
                 let hasShield = false;
-                for (const arrow of this.arrows) {
-                    if (arrow.shieldTimer > 0) {
+                for (const pixieDust of this.pixieDusts) {
+                    if (pixieDust.shieldTimer > 0) {
                         hasShield = true;
                         
                         // Show shield block message
@@ -2684,8 +2585,8 @@ var Game = /*#__PURE__*/ function() {
                 for (let i = this.world.items.length - 1; i >= 0; i--) {
                     const item = this.world.items[i];
                     
-                    // Only auto-collect enderpearls and blaze rods
-                    if (item.type !== 'enderpearl' && item.type !== 'blazerod') continue;
+                    // Only auto-collect sunflowers and blaze rods
+                    if (item.type !== 'sunflower' && item.type !== 'blazerod') continue;
                     
                     // Create item bounds
                     const itemBounds = {
@@ -2728,7 +2629,7 @@ var Game = /*#__PURE__*/ function() {
             value: function createCollectionSparkles(x, y, type) {
                 // Create 10-15 sparkle particles
                 const particleCount = 10 + Math.floor(Math.random() * 6);
-                const color = type === 'enderpearl' ? '#9932CC' : '#FF8C00'; // Purple for enderpearl, orange for blaze rod
+                const color = type === 'sunflower' ? '#FFD700' : '#FF8C00'; // Yellow for sunflower, orange for blaze rod
                 
                 // Sparkle symbols
                 const symbols = ['✦', '✧', '★', '☆', '✴', '✩', '✫', '*'];

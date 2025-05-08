@@ -28,6 +28,7 @@ var QuizPanel = /*#__PURE__*/ function() {
         this.visible = false;
         this.fadeIn = 0;
         this.lastTime = Date.now();
+        this.answered = false; // Add flag to track if an answer has been selected
         
         // Panel dimensions
         this.width = 360;
@@ -244,7 +245,7 @@ var QuizPanel = /*#__PURE__*/ function() {
         {
             key: "handleClick",
             value: function handleClick(event) {
-                if (!this.visible) return;
+                if (!this.visible || this.answered) return; // Don't handle clicks if already answered
                 const rect = this.game.canvas.getBoundingClientRect();
                 const mouseX = (event.clientX - rect.left) * (this.game.canvas.width / rect.width);
                 const mouseY = (event.clientY - rect.top) * (this.game.canvas.height / rect.height);
@@ -260,6 +261,7 @@ var QuizPanel = /*#__PURE__*/ function() {
                             mouseX <= this.x + this.width - 30 && 
                             mouseY >= buttonY && 
                             mouseY <= buttonY + buttonHeight) {
+                            this.answered = true; // Set answered flag
                             this.selectedAnswer = i;
                             this.checkAnswer();
                             break;
@@ -271,7 +273,7 @@ var QuizPanel = /*#__PURE__*/ function() {
         {
             key: "handleTouch",
             value: function handleTouch(event) {
-                if (!this.visible) return;
+                if (!this.visible || this.answered) return; // Don't handle touches if already answered
                 event.preventDefault();
                 const rect = this.game.canvas.getBoundingClientRect();
                 const touch = event.touches[0];
@@ -289,6 +291,7 @@ var QuizPanel = /*#__PURE__*/ function() {
                             touchX <= this.x + this.width - 30 && 
                             touchY >= buttonY && 
                             touchY <= buttonY + buttonHeight) {
+                            this.answered = true; // Set answered flag
                             this.selectedAnswer = i;
                             this.checkAnswer();
                             break;
@@ -308,6 +311,7 @@ var QuizPanel = /*#__PURE__*/ function() {
                 this.showingFeedback = false;
                 this.currentMiningSpot = miningSpot;
                 this.buttonAnimations = [0, 0, 0, 0];
+                this.answered = false; // Reset answered flag when showing new quiz
             }
         },
         {
@@ -316,6 +320,7 @@ var QuizPanel = /*#__PURE__*/ function() {
                 this.visible = false;
                 this.currentQuiz = null;
                 this.selectedAnswer = null;
+                this.answered = false; // Reset answered flag when hiding
             }
         },
         {
@@ -352,34 +357,34 @@ var QuizPanel = /*#__PURE__*/ function() {
                     // If this quiz is from a mining spot, award the resource
                     if (this.currentMiningSpot) {
                         // Determine which resource to award based on probability
-                        // Shield: 1/4, Crossbow: 1/4, Obsidian: 2/4
+                        // Tulip: 1/4, Grape: 1/4, Cactus: 2/4
                         let resourceType;
                         const randomValue = Math.random();
                         
                         if (randomValue < 1/4) {
-                            resourceType = 'shield';
+                            resourceType = 'tulip';
                         } else if (randomValue < 2/4) {
-                            resourceType = 'crossbow';
+                            resourceType = 'grape';
                         } else {
-                            resourceType = 'obsidian';
+                            resourceType = 'cactus';
                         }
                         
                         // Add the appropriate resource based on the randomly determined type
                         switch(resourceType) {
-                            case 'crossbow':
-                                // Add crossbow to player's inventory
-                                this.game.resourceManager.addResource('crossbow', 1);
-                                this.game.floatingTexts.push(new FloatingText("Collected Crossbow!", this.currentMiningSpot.x, this.currentMiningSpot.y - 40));
+                            case 'grape':
+                                // Add grape to player's inventory
+                                this.game.resourceManager.addResource('grape', 1);
+                                this.game.floatingTexts.push(new FloatingText("Collected Grape!", this.currentMiningSpot.x, this.currentMiningSpot.y - 40));
                                 break;
-                            case 'shield':
-                                // Add shield to player's inventory
-                                this.game.resourceManager.addResource('shield', 1);
-                                this.game.floatingTexts.push(new FloatingText("Collected Shield!", this.currentMiningSpot.x, this.currentMiningSpot.y - 40));
+                            case 'tulip':
+                                // Add tulip to player's inventory
+                                this.game.resourceManager.addResource('tulip', 1);
+                                this.game.floatingTexts.push(new FloatingText("Collected Tulip!", this.currentMiningSpot.x, this.currentMiningSpot.y - 40));
                                 break;
-                            case 'obsidian':
-                                // Add obsidian to player's inventory
-                                this.game.resourceManager.addResource('obsidian', 1);
-                                this.game.floatingTexts.push(new FloatingText("Collected Obsidian Block!", this.currentMiningSpot.x, this.currentMiningSpot.y - 40));
+                            case 'cactus':
+                                // Add cactus to player's inventory
+                                this.game.resourceManager.addResource('cactus', 1);
+                                this.game.floatingTexts.push(new FloatingText("Collected Cactus!", this.currentMiningSpot.x, this.currentMiningSpot.y - 40));
                                 break;
                         }
                         

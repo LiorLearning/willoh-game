@@ -25,9 +25,9 @@ var Enderman = /*#__PURE__*/ function() {
         var platform = arguments.length > 3 && arguments[3] !== void 0 ? arguments[3] : null;
         _class_call_check(this, Enderman);
         this.x = x;
-        this.y = platform ? platform.y - 50 : GROUND_LEVEL - 10;
-        this.width = 30;
-        this.height = 50;
+        this.y = platform ? platform.y - 75 : GROUND_LEVEL - 15;
+        this.width = 45;
+        this.height = 75;
         this.baseSpeed = 0.5;
         this.speed = this.baseSpeed;
         this.direction = 1;
@@ -145,7 +145,7 @@ var Enderman = /*#__PURE__*/ function() {
                 var endermanTexture = assetLoader === null || assetLoader === void 0 ? void 0 : assetLoader.getAsset('enderman');
                 if (endermanTexture) {
                     var endermanWidth = this.width * 1.5;
-                    var endermanHeight = this.height * 1.6;
+                    var endermanHeight = this.height * 1.5;
                     var endermanX = screenX - (endermanWidth - this.width) / 2;
                     var endermanY = this.y - (endermanHeight - this.height);
                     ctx.save();

@@ -94,23 +94,23 @@ var MiningSpot = /*#__PURE__*/ function() {
                 var blockColor;
                 
                 switch(this.type) {
-                    // case 'crossbow':
-                    //     blockTexture = assetLoader?.getAsset('crossbow') || assetLoader?.getAsset('greyCubeBlock');
-                    //     blockColor = '#8B4513'; // Brown
-                    //     break;
-                    // case 'shield':
-                    //     blockTexture = assetLoader?.getAsset('shield') || assetLoader?.getAsset('greyCubeBlock');
-                    //     blockColor = '#C0C0C0'; // Silver
-                    //     break;
-                    // case 'obsidian':
-                    //     blockTexture = assetLoader?.getAsset('obsidian') || assetLoader?.getAsset('greyCubeBlock');
-                    //     blockColor = '#301934'; // Dark purple
-                    //     break;
-                    // case 'random':
-                    //     // Use iron ore texture for unknown/random resource
-                    //     blockTexture = assetLoader?.getAsset('ironOre') || assetLoader?.getAsset('greyCubeBlock');
-                    //     blockColor = '#777777'; // Mystery block color
-                    //     break;
+                    case 'grape':
+                        blockTexture = assetLoader?.getAsset('grape') || assetLoader?.getAsset('greyCubeBlock');
+                        blockColor = '#8B4513'; // Brown
+                        break;
+                    case 'tulip':
+                        blockTexture = assetLoader?.getAsset('tulip') || assetLoader?.getAsset('greyCubeBlock');
+                        blockColor = '#C0C0C0'; // Silver
+                        break;
+                    case 'cactus':
+                        blockTexture = assetLoader?.getAsset('cactus') || assetLoader?.getAsset('greyCubeBlock');
+                        blockColor = '#301934'; // Dark purple
+                        break;
+                    case 'random':
+                        // Use iron ore texture for unknown/random resource
+                        blockTexture = assetLoader?.getAsset('ironOre') || assetLoader?.getAsset('greyCubeBlock');
+                        blockColor = '#777777'; // Mystery block color
+                        break;
                     default:
                         blockTexture = assetLoader?.getAsset('greyCubeBlock');
                         blockColor = '#A9A9A9'; // Gray

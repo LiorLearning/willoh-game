@@ -211,10 +211,10 @@ export var AssetLoader = /*#__PURE__*/ function() {
             'gold nugget': 'https://rosebud.ai/assets/one gold nugget minecraft.png?qQYy',
             'enderman': './assets/level3/enderman.png',
             'hammer': './assets/level3/hammer.png',
-            'enderpearl': './assets/level3/ender_pearl.png',
-            'obsidian': './assets/level3/obsidian.png',
-            'crossbow': './assets/level3/crossbow.png',
-            'shield': './assets/level3/shield.png',
+            'grape': './assets/level3/grape.png',
+            'tulip': './assets/level3/tulip.png',
+            'cactus': './assets/level3/cactus.png',
+            'sunflower': './assets/level3/sunflower.png',
             'portal': './assets/level3/portal.png',
             
             // Add stage 2 assets

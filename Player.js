@@ -39,8 +39,8 @@ var Player = /*#__PURE__*/ function() {
         );
         this.x = x;
         this.y = y;
-        this.width = 35; // Slightly wider to match Dave sprite
-        this.height = 45; // Taller to match Dave sprite
+        this.width = 52; // 1.5x of 35
+        this.height = 67; // 1.5x of 45
         this.velocityX = 0;
         this.velocityY = 0;
         this.health = 5;
@@ -60,7 +60,6 @@ var Player = /*#__PURE__*/ function() {
         this.immunityDuration = 1500; // 1.5 seconds of immunity after being hit
         this.immunityTimer = 0;
         this.hasShovel = true; // Player starts with a shovel
-        this.hasHammer = true; // Player starts with a hammer
         this.hasGoldenBoots = false; // Track golden boots status
     }
     _create_class(Player, [
@@ -232,11 +231,11 @@ var Player = /*#__PURE__*/ function() {
             key: "renderDaveSprite",
             value: function renderDaveSprite(ctx, screenX, daveTexture) {
                 var _this_game_assetLoader, _this_game;
-                var daveWidth = this.width * 1.5;
-                var daveHeight = this.height * 1.8;
-                // Calculate Dave position (centered)
-                var daveX = screenX - (daveWidth - this.width) / 2;
-                var daveY = this.y - (daveHeight - this.height) + 5; // Adjust position to match feet
+                var daveWidth = this.width * 1.5; // 1.5x size
+                var daveHeight = this.height * 1.5; // 1.5x size
+                // Calculate Dave position
+                var daveX = screenX - (daveWidth - this.width) / 2; // Center the larger sprite
+                var daveY = this.y - (daveHeight - this.height); // Adjust Y position for larger sprite
                 // Save context for transformations
                 ctx.save();
                 // Center point for transformations

@@ -15,14 +15,14 @@ export class CraftingPanel {
         // Resource requirements
         this.requirements = {
             stage1: {
-                crossbow: 1,
-                shield: 1,
-                obsidian: 4,
-                enderpearl: 2
+                grape: 1,
+                tulip: 1,
+                cactus: 4,
+                sunflower: 2
             },
             stage2: {
                 blazerod: 3,
-                enderpearl: 2
+                sunflower: 2
             }
         };
         
@@ -55,14 +55,14 @@ export class CraftingPanel {
         
         // Check if we have enough resources
         if (
-            (this.resources.crossbow || 0) >= reqs.crossbow &&
-            (this.resources.shield || 0) >= reqs.shield &&
-            (this.resources.obsidian || 0) >= reqs.obsidian &&
-            (this.resources.enderpearl || 0) >= reqs.enderpearl
+            (this.resources.grape || 0) >= reqs.grape &&
+            (this.resources.tulip || 0) >= reqs.tulip &&
+            (this.resources.cactus || 0) >= reqs.cactus &&
+            (this.resources.sunflower || 0) >= reqs.sunflower
         ) {
             // Use resources
-            this.resources.obsidian -= reqs.obsidian;
-            this.resources.enderpearl -= reqs.enderpearl;
+            this.resources.cactus -= reqs.cactus;
+            this.resources.sunflower -= reqs.sunflower;
             
             // Create portal in front of player
             const portalX = this.game.player.x + 150;
@@ -119,11 +119,11 @@ export class CraftingPanel {
         // Check if we have enough resources
         if (
             (this.resources.blazerod || 0) >= reqs.blazerod &&
-            (this.resources.enderpearl || 0) >= reqs.enderpearl
+            (this.resources.sunflower || 0) >= reqs.sunflower
         ) {
             // Use resources
             this.resources.blazerod -= reqs.blazerod;
-            this.resources.enderpearl -= reqs.enderpearl;
+            this.resources.sunflower -= reqs.sunflower;
             
             // Create fortress in front of player
             const fortressX = this.game.player.x + 250;
@@ -179,7 +179,7 @@ export class CraftingPanel {
         if (this.isStage2) {
             allRequirementsMet = 
                 (this.resources.blazerod || 0) >= this.requirements.stage2.blazerod &&
-                (this.resources.enderpearl || 0) >= this.requirements.stage2.enderpearl;
+                (this.resources.sunflower || 0) >= this.requirements.stage2.sunflower;
                 
             // If all requirements are met and fortress doesn't exist, automatically create it
             if (allRequirementsMet && !this.game.fortress) {
@@ -188,7 +188,7 @@ export class CraftingPanel {
                 
                 // Use blaze rods and ender pearls
                 this.resources.blazerod -= this.requirements.stage2.blazerod;
-                this.resources.enderpearl -= this.requirements.stage2.enderpearl;
+                this.resources.sunflower -= this.requirements.stage2.sunflower;
                 
                 // Create the fortress
                 if (typeof this.game.createFortress === 'function') {
@@ -201,10 +201,10 @@ export class CraftingPanel {
             }
         } else {
             allRequirementsMet = 
-                (this.resources.crossbow || 0) >= this.requirements.stage1.crossbow &&
-                (this.resources.shield || 0) >= this.requirements.stage1.shield &&
-                (this.resources.obsidian || 0) >= this.requirements.stage1.obsidian &&
-                (this.resources.enderpearl || 0) >= this.requirements.stage1.enderpearl;
+                (this.resources.grape || 0) >= this.requirements.stage1.grape &&
+                (this.resources.tulip || 0) >= this.requirements.stage1.tulip &&
+                (this.resources.cactus || 0) >= this.requirements.stage1.cactus &&
+                (this.resources.sunflower || 0) >= this.requirements.stage1.sunflower;
         }
         
         return allRequirementsMet;
@@ -255,13 +255,13 @@ export class CraftingPanel {
         if (this.isStage2) {
             // Stage 2 resources
             this.renderResourceRequirement(ctx, 'Blaze Rod', 'blazerod', this.requirements.stage2.blazerod, 70);
-            this.renderResourceRequirement(ctx, 'Ender Pearl', 'enderpearl', this.requirements.stage2.enderpearl, 100);
+            this.renderResourceRequirement(ctx, 'Sunflower', 'sunflower', this.requirements.stage2.sunflower, 100);
         } else {
             // Stage 1 resources
-            this.renderResourceRequirement(ctx, 'Crossbow', 'crossbow', this.requirements.stage1.crossbow, 70);
-            this.renderResourceRequirement(ctx, 'Shield', 'shield', this.requirements.stage1.shield, 100);
-            this.renderResourceRequirement(ctx, 'Obsidian', 'obsidian', this.requirements.stage1.obsidian, 130);
-            this.renderResourceRequirement(ctx, 'Ender Pearl', 'enderpearl', this.requirements.stage1.enderpearl, 160);
+            this.renderResourceRequirement(ctx, 'Grape', 'grape', this.requirements.stage1.grape, 70);
+            this.renderResourceRequirement(ctx, 'Tulip', 'tulip', this.requirements.stage1.tulip, 100);
+            this.renderResourceRequirement(ctx, 'Cactus', 'cactus', this.requirements.stage1.cactus, 130);
+            this.renderResourceRequirement(ctx, 'Sunflower', 'sunflower', this.requirements.stage1.sunflower, 160);
         }
 
         // Check if all requirements are met

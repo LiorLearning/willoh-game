@@ -20,7 +20,7 @@ class WelcomeScreen {
             y: CANVAS_HEIGHT / 2 + 80,
             width: 200,
             height: 40,
-            text: "CREDITS: SANDRO",
+            text: "CREDITS: WILLOH",
             hovered: false
         };
 
@@ -82,40 +82,40 @@ class WelcomeScreen {
     }
 
     render(ctx) {
-        // Dark End background with gradient
+        // Garden background with gradient
         const gradient = ctx.createLinearGradient(0, 0, 0, CANVAS_HEIGHT);
-        gradient.addColorStop(0, '#0f0f1a');
-        gradient.addColorStop(1, '#12122d');
+        gradient.addColorStop(0, '#1a3a1a');  // Dark green
+        gradient.addColorStop(1, '#2d4a2d');  // Lighter green
         ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
-        // Add subtle End stone texture pattern
-        this.renderEndTexture(ctx);
+        // Add subtle garden texture pattern
+        this.renderGardenTexture(ctx);
         
-        // Render floating End particles
-        this.renderEndParticles(ctx);
+        // Render floating garden particles
+        this.renderGardenParticles(ctx);
         
-        // Render decorative elements (instead of endermen)
+        // Render decorative elements
         this.renderDecorativeElements(ctx);
 
-        // Title with Ender Eye glow effect
+        // Title with garden glow effect
         const time = Date.now() / 1000;
         ctx.save();
         
         // Glow effect
-        ctx.shadowColor = '#9966ff';
+        ctx.shadowColor = '#ffcc00';  // Yellow glow
         ctx.shadowBlur = 20 + Math.sin(time * 2) * 5;
-        ctx.fillStyle = '#bb99ff';
+        ctx.fillStyle = '#ffdd44';  // Bright yellow
         ctx.font = 'bold 64px "Press Start 2P", monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('THE EYES OF ENDER', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 3);
+        ctx.fillText('SAVE THE PLANTS', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 3);
 
         // Subtitle
         ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
         ctx.shadowBlur = 10;
         ctx.fillStyle = '#cccccc';
         ctx.font = '24px "Press Start 2P", monospace';
-        ctx.fillText('Level 3', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 3 + 50);
+        ctx.fillText('Level 1', CANVAS_WIDTH / 2, CANVAS_HEIGHT / 3 + 50);
 
         ctx.restore();
 
@@ -127,7 +127,7 @@ class WelcomeScreen {
         ctx.fillStyle = '#666666';
         ctx.font = '12px "Press Start 2P", monospace';
         ctx.textAlign = 'right';
-        ctx.fillText('Journey to The End', CANVAS_WIDTH - 20, CANVAS_HEIGHT - 20);
+        ctx.fillText('Garden Adventure', CANVAS_WIDTH - 20, CANVAS_HEIGHT - 20);
     }
 
     renderPixelButton(ctx, button) {
@@ -136,14 +136,14 @@ class WelcomeScreen {
         // Button background with pixel border
         const gradient = ctx.createLinearGradient(button.x, button.y, button.x, button.y + button.height);
         if (button.hovered) {
-            gradient.addColorStop(0, '#9966ff');
-            gradient.addColorStop(1, '#6633cc');
-            ctx.shadowColor = '#aa88ff';
+            gradient.addColorStop(0, '#ffcc00');  // Yellow
+            gradient.addColorStop(1, '#cc9900');  // Darker yellow
+            ctx.shadowColor = '#ffdd44';
             ctx.shadowBlur = 15;
         } else {
-            gradient.addColorStop(0, '#221144');
-            gradient.addColorStop(1, '#110033');
-            ctx.shadowColor = '#9966ff';
+            gradient.addColorStop(0, '#224422');  // Dark green
+            gradient.addColorStop(1, '#113311');  // Darker green
+            ctx.shadowColor = '#44aa44';
             ctx.shadowBlur = 5;
         }
 
@@ -152,7 +152,7 @@ class WelcomeScreen {
         ctx.fillRect(button.x, button.y, button.width, button.height);
         
         // Pixel corners
-        ctx.fillStyle = button.hovered ? '#aa88ff' : '#332255';
+        ctx.fillStyle = button.hovered ? '#ffdd44' : '#336633';  // Yellow or green
         ctx.fillRect(button.x - 2, button.y - 2, 4, 4);
         ctx.fillRect(button.x + button.width - 2, button.y - 2, 4, 4);
         ctx.fillRect(button.x - 2, button.y + button.height - 2, 4, 4);
@@ -168,22 +168,22 @@ class WelcomeScreen {
         ctx.restore();
     }
 
-    renderEndTexture(ctx) {
-        // Create subtle End stone texture pattern
+    renderGardenTexture(ctx) {
+        // Create subtle garden texture pattern
         for (let i = 0; i < 50; i++) {
             const x = Math.random() * CANVAS_WIDTH;
             const y = Math.random() * CANVAS_HEIGHT;
             const size = 1 + Math.random() * 3;
             
-            ctx.fillStyle = `rgba(220, 220, 240, ${Math.random() * 0.1})`;
+            ctx.fillStyle = `rgba(220, 240, 220, ${Math.random() * 0.1})`;  // Light green
             ctx.fillRect(x, y, size, size);
         }
     }
 
-    renderEndParticles(ctx) {
+    renderGardenParticles(ctx) {
         const time = Date.now() / 1000;
         
-        // Create floating End particles
+        // Create floating garden particles
         for (let i = 0; i < 20; i++) {
             const x = (Math.sin(time * 0.5 + i) * 0.5 + 0.5) * CANVAS_WIDTH;
             const y = ((Math.cos(time * 0.3 + i) * 0.5 + 0.5) * CANVAS_HEIGHT * 0.8) + 
@@ -191,8 +191,8 @@ class WelcomeScreen {
             
             // Particle glow
             const gradient = ctx.createRadialGradient(x, y, 0, x, y, 10);
-            gradient.addColorStop(0, 'rgba(153, 102, 255, 0.2)');
-            gradient.addColorStop(1, 'rgba(102, 51, 204, 0)');
+            gradient.addColorStop(0, 'rgba(255, 204, 0, 0.2)');  // Yellow
+            gradient.addColorStop(1, 'rgba(204, 153, 0, 0)');    // Darker yellow
             
             ctx.fillStyle = gradient;
             ctx.beginPath();
@@ -200,39 +200,43 @@ class WelcomeScreen {
             ctx.fill();
             
             // Particle core
-            ctx.fillStyle = '#bb99ff';
+            ctx.fillStyle = '#ffdd44';  // Bright yellow
             ctx.beginPath();
             ctx.arc(x, y, 2, 0, Math.PI * 2);
             ctx.fill();
         }
     }
     
-    // Render additional decorative elements (replacing endermen with more end particles)
+    // Render additional decorative elements
     renderDecorativeElements(ctx) {
         const time = Date.now() / 1000;
         
-        // Create additional decorative elements - larger purple crystals
+        // Create additional decorative elements - flowers
         for (let i = 0; i < 5; i++) {
             const x = (Math.sin(time * 0.2 + i * 1.5) * 0.4 + 0.5) * CANVAS_WIDTH;
             const y = ((Math.sin(time * 0.1 + i * 0.7) * 0.3 + 0.5) * CANVAS_HEIGHT);
             
-            // Draw purple crystal
+            // Draw flower
             ctx.save();
             ctx.translate(x, y);
             ctx.rotate(Math.sin(time * 0.5 + i) * 0.1);
             
-            // Crystal glow
-            ctx.shadowColor = '#9966ff';
+            // Flower glow
+            ctx.shadowColor = '#ffcc00';
             ctx.shadowBlur = 15;
             
-            // Crystal shape
-            ctx.fillStyle = '#9966ff';
+            // Flower petals
+            ctx.fillStyle = '#ffdd44';  // Yellow
+            for (let j = 0; j < 5; j++) {
+                ctx.beginPath();
+                ctx.ellipse(0, 0, 8, 4, (j * Math.PI * 2) / 5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            
+            // Flower center
+            ctx.fillStyle = '#44aa44';  // Green
             ctx.beginPath();
-            ctx.moveTo(0, -15);
-            ctx.lineTo(8, 5);
-            ctx.lineTo(0, 25);
-            ctx.lineTo(-8, 5);
-            ctx.closePath();
+            ctx.arc(0, 0, 4, 0, Math.PI * 2);
             ctx.fill();
             
             ctx.restore();
