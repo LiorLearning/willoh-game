@@ -149,6 +149,10 @@ export var ResourceManager = /*#__PURE__*/ function() {
                 }
                 // Check if bow can be crafted
                 this.checkCraftingAvailability('bow');
+                // NEW: Check resource completion after any resource change
+                if (this.game && typeof this.game.checkResourceCompletion === 'function') {
+                    this.game.checkResourceCompletion();
+                }
                 return true;
             }
         },
@@ -172,6 +176,10 @@ export var ResourceManager = /*#__PURE__*/ function() {
                 // Update crafting panel
                 if (this.game.craftingPanel) {
                     this.game.craftingPanel.updateResources(this.resources);
+                }
+                // NEW: Check resource completion after any resource change
+                if (this.game && typeof this.game.checkResourceCompletion === 'function') {
+                    this.game.checkResourceCompletion();
                 }
                 return true;
             }
