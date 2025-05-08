@@ -1348,7 +1348,7 @@ var Game = /*#__PURE__*/ function() {
                 this.ctx.font = '16px Arial';
                 this.ctx.textAlign = 'left';
                 this.ctx.textBaseline = 'middle';
-                this.ctx.fillText(`Enderman Speed: ${currentSpeed.toFixed(1)}`, boxX + 10, boxY + boxHeight/2);
+                this.ctx.fillText(`TIMMY SPEED: ${currentSpeed.toFixed(1)}`, boxX + 10, boxY + boxHeight/2);
             }
         },
         {
