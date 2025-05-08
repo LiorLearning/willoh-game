@@ -45,7 +45,8 @@ var Player = /*#__PURE__*/ function() {
         this.velocityY = 0;
         this.health = 5;
         this.speed = 5;
-        this.jumpForce = -12;
+        this.jumpForce = -10; // Reduced from -12 for more controlled jumps
+        this.airResistance = 0.98; // Added air resistance factor
         this.isJumping = false;
         this.hasDoubleJumped = false; // Track if double jump has been used
         this.facingRight = true;
@@ -133,6 +134,10 @@ var Player = /*#__PURE__*/ function() {
                 var prevY = this.y;
                 // Apply gravity
                 this.velocityY += GRAVITY;
+                // Apply air resistance when in air
+                if (this.isJumping) {
+                    this.velocityY *= this.airResistance;
+                }
                 // Update position
                 this.x += this.velocityX;
                 this.y += this.velocityY;

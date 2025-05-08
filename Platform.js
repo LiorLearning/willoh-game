@@ -47,8 +47,10 @@ var Platform = /*#__PURE__*/ function() {
                 // Check if player was above platform in previous frame and is now at or below platform level
                 var wasAbovePlatform = playerLastBottom <= this.y;
                 var isAtOrBelowPlatform = playerBottom >= this.y - this.jumpPadding;
+                // Only detect landing if player is moving downward
+                var isMovingDown = player.velocityY > 0;
                 // Detect when player falls onto a platform or is standing on it
-                return isOverlappingPlatform && (wasAbovePlatform && isAtOrBelowPlatform || Math.abs(playerBottom - this.y) < 5 + this.jumpPadding); // Adjusted tolerance with jump padding
+                return isOverlappingPlatform && isMovingDown && (wasAbovePlatform && isAtOrBelowPlatform || Math.abs(playerBottom - this.y) < 5 + this.jumpPadding);
             }
         },
         {
