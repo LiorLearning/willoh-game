@@ -43,149 +43,41 @@ var QuizPanel = /*#__PURE__*/ function() {
         this.feedbackColor = 'white';
         this.showingFeedback = false;
         this.feedbackTimer = 0;
-        this.buttonAnimations = [0, 0, 0, 0]; // Animation progress for each button
+        this.buttonAnimations = [0, 0, 0, 0];
+        this.currentStage = 1; // Track which stage of the quiz we're on
+        this.currentMultiplication = null; // Store the current multiplication problem
 
-        // Quiz question bank - educational questions on various topic
+        // Quiz question bank - multiplication as repeated addition
         this.quizQuestions = [
             {
-                question: "What is 7 × 8?",
-                answers: [
-                    "48",
-                    "54",
-                    "56",
-                    "64"
-                ],
-                correctAnswer: 2,
-                reward: {
-                    type: "goldNuggets",
-                    amount: 6
-                }
+                firstNumber: 4,
+                secondNumber: 5,
+                repeatedAddition: "4+4+4+4+4",
+                answer: 20
             },
             {
-                question: "What is 64 ÷ 8?",
-                answers: [
-                    "6",
-                    "7",
-                    "8",
-                    "9"
-                ],
-                correctAnswer: 2,
-                reward: {
-                    type: "goldNuggets",
-                    amount: 6
-                }
+                firstNumber: 3,
+                secondNumber: 6,
+                repeatedAddition: "3+3+3+3+3+3",
+                answer: 18
             },
             {
-                question: "What is 6 × 9?",
-                answers: [
-                    "45",
-                    "54",
-                    "56",
-                    "63"
-                ],
-                correctAnswer: 1,
-                reward: {
-                    type: "goldNuggets",
-                    amount: 6
-                }
+                firstNumber: 5,
+                secondNumber: 4,
+                repeatedAddition: "5+5+5+5",
+                answer: 20
             },
             {
-                question: "What is 81 ÷ 9?",
-                answers: [
-                    "7",
-                    "8",
-                    "9",
-                    "10"
-                ],
-                correctAnswer: 2,
-                reward: {
-                    type: "goldNuggets",
-                    amount: 6
-                }
+                firstNumber: 6,
+                secondNumber: 3,
+                repeatedAddition: "6+6+6",
+                answer: 18
             },
             {
-                question: "What is 5 × 7?",
-                answers: [
-                    "25",
-                    "30",
-                    "35",
-                    "40"
-                ],
-                correctAnswer: 2,
-                reward: {
-                    type: "goldNuggets",
-                    amount: 6
-                }
-            },
-            {
-                question: "What is 36 ÷ 6?",
-                answers: [
-                    "4",
-                    "5",
-                    "6",
-                    "7"
-                ],
-                correctAnswer: 2,
-                reward: {
-                    type: "goldNuggets",
-                    amount: 6
-                }
-            },
-            {
-                question: "What is 8 × 4?",
-                answers: [
-                    "24",
-                    "28",
-                    "32",
-                    "36"
-                ],
-                correctAnswer: 2,
-                reward: {
-                    type: "goldNuggets",
-                    amount: 6
-                }
-            },
-            {
-                question: "What is 49 ÷ 7?",
-                answers: [
-                    "5",
-                    "6",
-                    "7",
-                    "8"
-                ],
-                correctAnswer: 2,
-                reward: {
-                    type: "goldNuggets",
-                    amount: 6
-                }
-            },
-            {
-                question: "What is 3 × 6?",
-                answers: [
-                    "12",
-                    "15",
-                    "18",
-                    "21"
-                ],
-                correctAnswer: 2,
-                reward: {
-                    type: "goldNuggets",
-                    amount: 6
-                }
-            },
-            {
-                question: "What is 25 ÷ 5?",
-                answers: [
-                    "3",
-                    "4",
-                    "5",
-                    "6"
-                ],
-                correctAnswer: 2,
-                reward: {
-                    type: "goldNuggets",
-                    amount: 6
-                }
+                firstNumber: 7,
+                secondNumber: 2,
+                repeatedAddition: "7+7",
+                answer: 14
             }
         ];
         this.setupListeners();
@@ -326,23 +218,29 @@ var QuizPanel = /*#__PURE__*/ function() {
         {
             key: "selectRandomQuiz",
             value: function selectRandomQuiz() {
-                // Select questions based on mining spot type if available
-                if (this.currentMiningSpot) {
-                    // Filter questions related to the mining spot resource type
-                    var resourceType = this.currentMiningSpot.type;
-                    var typeQuestions = this.quizQuestions.filter(function(q) {
-                        return q.reward.type === resourceType;
-                    });
-                    if (typeQuestions.length > 0) {
-                        // Choose from resource-specific questions
-                        var randomIndex = Math.floor(Math.random() * typeQuestions.length);
-                        this.currentQuiz = typeQuestions[randomIndex];
-                        return;
+                // Select a random multiplication problem
+                var randomIndex = Math.floor(Math.random() * this.quizQuestions.length);
+                this.currentMultiplication = this.quizQuestions[randomIndex];
+                this.currentStage = 1;
+                this.answered = false;
+                this.selectedAnswer = null;
+                this.showingFeedback = false;
+                
+                // Set up the first stage question
+                this.currentQuiz = {
+                    question: `How can we write ${this.currentMultiplication.firstNumber} × ${this.currentMultiplication.secondNumber}?`,
+                    answers: [
+                        this.currentMultiplication.repeatedAddition,
+                        this.generateWrongRepeatedAddition(this.currentMultiplication),
+                        this.generateWrongRepeatedAddition(this.currentMultiplication),
+                        this.generateWrongRepeatedAddition(this.currentMultiplication)
+                    ],
+                    correctAnswer: 0,
+                    reward: {
+                        type: "goldNuggets",
+                        amount: 6
                     }
-                }
-                // Fallback to random question if no matching questions or no mining spot
-                var randomIndex1 = Math.floor(Math.random() * this.quizQuestions.length);
-                this.currentQuiz = this.quizQuestions[randomIndex1];
+                };
             }
         },
         {
@@ -350,7 +248,29 @@ var QuizPanel = /*#__PURE__*/ function() {
             value: function checkAnswer() {
                 var _this = this;
                 if (this.selectedAnswer === this.currentQuiz.correctAnswer) {
-                    // Correct answer
+                    if (this.currentStage === 1) {
+                        // Move to stage 2
+                        this.currentStage = 2;
+                        this.answered = false;
+                        this.selectedAnswer = null;
+                        this.showingFeedback = false;
+                        
+                        // Set up the second stage question
+                        this.currentQuiz = {
+                            question: `What is ${this.currentMultiplication.repeatedAddition}?`,
+                            answers: [
+                                this.currentMultiplication.answer.toString(),
+                                (this.currentMultiplication.answer + 5).toString(),
+                                (this.currentMultiplication.answer - 3).toString(),
+                                (this.currentMultiplication.answer + 2).toString()
+                            ],
+                            correctAnswer: 0,
+                            reward: this.currentQuiz.reward
+                        };
+                        return;
+                    }
+                    
+                    // Correct answer in stage 2
                     this.feedbackMessage = 'Correct! Resource collected.';
                     this.feedbackColor = '#4CAF50'; // Green
                     
@@ -369,36 +289,16 @@ var QuizPanel = /*#__PURE__*/ function() {
                             resourceType = 'cactus';
                         }
                         
-                        // Add the appropriate resource based on the randomly determined type
-                        switch(resourceType) {
-                            case 'grape':
-                                // Add grape to player's inventory
-                                this.game.resourceManager.addResource('grape', 1);
-                                this.game.floatingTexts.push(new FloatingText("Collected Grape!", this.currentMiningSpot.x, this.currentMiningSpot.y - 40));
-                                break;
-                            case 'tulip':
-                                // Add tulip to player's inventory
-                                this.game.resourceManager.addResource('tulip', 1);
-                                this.game.floatingTexts.push(new FloatingText("Collected Tulip!", this.currentMiningSpot.x, this.currentMiningSpot.y - 40));
-                                break;
-                            case 'cactus':
-                                // Add cactus to player's inventory
-                                this.game.resourceManager.addResource('cactus', 1);
-                                this.game.floatingTexts.push(new FloatingText("Collected Cactus!", this.currentMiningSpot.x, this.currentMiningSpot.y - 40));
-                                break;
-                        }
-                        
-                        // Mark the mining spot as having spawned a resource
-                        this.currentMiningSpot.resourceSpawned = true;
-                        
-                        // Update crafting panel
+                        // Add the resource to the game
+                        this.game.resourceManager.addResource(resourceType, 1);
                         this.game.craftingPanel.updateResources(this.game.resourceManager.getResources());
                         
-                        // Check if player has collected all required resources
-                        this.game.checkResourceCompletion();
+                        // Add floating text
+                        this.game.floatingTexts.push(new FloatingText(`+1 ${resourceType}`, this.currentMiningSpot.x, this.currentMiningSpot.y - 20));
                         
-                        // Start the respawn timer for this mining spot
-                        this.currentMiningSpot.startRespawnTimer();
+                        // Mark the mining spot as completed
+                        this.currentMiningSpot.quizCompleted = true;
+                        this.currentMiningSpot.resourceSpawned = true;
                         
                         // Play success sound
                         this.game.audioManager.play('collect', 1.0);
@@ -574,6 +474,26 @@ var QuizPanel = /*#__PURE__*/ function() {
                 // Main text
                 ctx.fillStyle = this.buttonAnimations[index] > 0 ? '#FFFFFF' : '#BBBBBB';
                 ctx.fillText(text, x + 12, textY + bounceOffset);
+            }
+        },
+        {
+            // Helper function to generate wrong repeated addition options
+            key: "generateWrongRepeatedAddition",
+            value: function generateWrongRepeatedAddition(multiplication) {
+                const firstNum = multiplication.firstNumber;
+                const secondNum = multiplication.secondNumber;
+                
+                // Generate different wrong patterns
+                const patterns = [
+                    // Wrong number of additions
+                    Array(secondNum - 1).fill(firstNum).join('+'),
+                    // Wrong number being added
+                    Array(secondNum).fill(firstNum + 1).join('+'),
+                    // Mixed numbers
+                    Array(secondNum).fill(firstNum).map((n, i) => n + (i % 2)).join('+')
+                ];
+                
+                return patterns[Math.floor(Math.random() * patterns.length)];
             }
         }
     ]);
